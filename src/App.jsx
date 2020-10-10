@@ -1,18 +1,21 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from './components/login/Login';
 import ProductList from './components/product-list/ProductList';
+import Header from './components/header/Header';
+import AuthenticatedRoute from './components/AuthenticatedRoute/AutenticatedRoute';
 
 function App() {
+  const [user, setUser] = useState()
+
   return (
     <div className="App">
-      {/* We want a header that will appear in every screen */}
+      <Header user={user}/>
       <Switch>
-        <Route path="/products" component={ProductList} />{" "}
-        {/* We don't wan't non-authenticated users to access the previous route! */}
-        <Route path="/" component={Login} />
-        <Redirect to="/products" />
+        <Route render={() => <Login setUser={setUser}/> } path="/login"/>
+        <AuthenticatedRoute path="/products" user={user} />
+        <Redirect to="/products" user={user} />
       </Switch>
     </div>
   );
